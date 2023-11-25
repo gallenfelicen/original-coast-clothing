@@ -86,7 +86,7 @@ module.exports = class Receive {
         {
           "model": "gpt-3.5-turbo",
           "messages": [{"role": "system", "content": "You are a helpful assistant."},
-          {"role": "user", "content": message}]
+          {"role": "user", "content": `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         },
         {
@@ -96,9 +96,8 @@ module.exports = class Receive {
           }
         }
       );
-  
-      // Extract the generated response from the OpenAI GPT API
-      return response.choices[0].message.content;
+      // Return the response from the API call
+        return response.choices[0].message.content;
     } catch (error) {
       console.error("Error calling GPT API:", error.message);
       // Handle error appropriately, e.g., return a default response
