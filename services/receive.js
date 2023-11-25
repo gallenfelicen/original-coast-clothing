@@ -21,7 +21,8 @@ const Curation = require("./curation"),
   GraphApi = require("./graph-api"),
   i18n = require("../i18n.config"),
   axios = require("axios"),
-  config = require("./config");
+  config = require("./config"),
+  {Configuration,OpenAIApi} = require("openai");
   
 const configuration = new Configuration({
   apiKey: config.gptApiKey,
@@ -81,8 +82,6 @@ module.exports = class Receive {
       this.sendMessage(responses, this.isUserRef);
     }
   }
-
-
 
   async generateGptResponse(message) {
     try {
