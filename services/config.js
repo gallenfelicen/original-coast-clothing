@@ -21,7 +21,8 @@ const ENV_VARS = [
   "APP_SECRET",
   "VERIFY_TOKEN",
   "APP_URL",
-  "SHOP_URL"
+  "SHOP_URL",
+  "GPT_API_KEY"
 ];
 
 module.exports = {
@@ -35,6 +36,7 @@ module.exports = {
   pageAccesToken: process.env.PAGE_ACCESS_TOKEN,
   appSecret: process.env.APP_SECRET,
   verifyToken: process.env.VERIFY_TOKEN,
+  gptApiKey: process.env.GPT_API_KEY,
 
   // URL of your app domain
   appUrl: process.env.APP_URL,
