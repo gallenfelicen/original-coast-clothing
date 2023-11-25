@@ -89,7 +89,7 @@ module.exports = class Receive {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer YOUR_OPENAI_API_KEY"
+            Authorization: config.gptApiKey
           }
         }
       );
