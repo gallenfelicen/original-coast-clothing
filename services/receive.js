@@ -9,8 +9,6 @@
  */
 
 "use strict";
-import { Configuration, OpenAIApi } from "openai";
-
 
 const Curation = require("./curation"),
   Order = require("./order"),
