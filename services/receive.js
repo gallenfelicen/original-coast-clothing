@@ -10,6 +10,7 @@
 
 "use strict";
 
+
 const Curation = require("./curation"),
   Order = require("./order"),
   Lead = require("./lead"),
@@ -76,21 +77,22 @@ module.exports = class Receive {
   }
 
 
+
   async generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-3.5-turbo-1106",
-          prompt: message,
-          max_tokens: 100
+          "model": "gpt-3.5-turbo",
+          "messages": [{"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": message}]
           // Add other parameters as needed based on your requirements
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${config.gptApiKey}`
+            'Authorization': `Bearer ${config.gptApiKey}`
           }
         }
       );
