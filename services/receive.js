@@ -18,8 +18,9 @@ const Curation = require("./curation"),
   Survey = require("./survey"),
   GraphApi = require("./graph-api"),
   i18n = require("../i18n.config"),
+  axios = require("axios"),
   config = require("./config");
-  const axios = require("axios");
+  
 
 module.exports = class Receive {
   constructor(user, webhookEvent, isUserRef) {
