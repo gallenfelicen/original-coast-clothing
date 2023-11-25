@@ -20,13 +20,11 @@ const Curation = require("./curation"),
   i18n = require("../i18n.config"),
   axios = require("axios"),
   config = require("./config"),
-  {Configuration,OpenAIApi} = require("openai");
+  OpenAI = require("openai");
   
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: config.gptApiKey,
 });
-
-const openai = new OpenAIApi(configuration);
 
 module.exports = class Receive {
   constructor(user, webhookEvent, isUserRef) {
@@ -87,8 +85,8 @@ module.exports = class Receive {
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
-          messages: [{"role": "system", "content": "You are a helpful assistant."},
-          {"role": "user", "content": `Hi I am Gallen, ${message}`}],
+          messages: [{role: "system", "content": "You are a helpful assistant."},
+          {role: "user", content: `Hi I am Gallen, ${message}`}],
           stream: true,
           // Add other parameters as needed based on your requirements
         },
