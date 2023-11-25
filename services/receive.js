@@ -89,7 +89,7 @@ module.exports = class Receive {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: config.gptApiKey
+            Authorization: `Bearer ${config.gptApiKey}`
           }
         }
       );
@@ -97,7 +97,7 @@ module.exports = class Receive {
       // Extract the generated response from the OpenAI GPT API
       return response.data.choices[0].text.trim();
     } catch (error) {
-      console.error("Error calling GPT API:", error.message, "GPT API KEY:", config.gptApiKey, type(config.gptApiKey));
+      console.error("Error calling GPT API:", error.message);
       // Handle error appropriately, e.g., return a default response
       return "An error occurred while processing your message.";
     }
