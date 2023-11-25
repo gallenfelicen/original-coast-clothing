@@ -98,7 +98,7 @@ module.exports = class Receive {
       );
   
       // Extract the generated response from the OpenAI GPT API
-      return response.data.choices[0].text.trim();
+      return response.choices[0].message.content;
     } catch (error) {
       console.error("Error calling GPT API:", error.message);
       // Handle error appropriately, e.g., return a default response
