@@ -19,6 +19,7 @@ const Curation = require("./curation"),
   GraphApi = require("./graph-api"),
   i18n = require("../i18n.config"),
   config = require("./config");
+  const axios = require("axios");
 
 module.exports = class Receive {
   constructor(user, webhookEvent, isUserRef) {
@@ -73,63 +74,36 @@ module.exports = class Receive {
     }
   }
 
-  // Handles messages events with text
-  handleTextMessage() {
-    console.log(
-      "Received text:",
-      `${this.webhookEvent.message.text} for ${this.user.psid}`
-    );
 
-    let event = this.webhookEvent;
-
-    // check greeting is here and is confident
-    let greeting = this.firstEntity(event.message.nlp, "greetings");
-    let message = event.message.text.trim().toLowerCase();
-
-    let response;
-
-    if (
-      (greeting && greeting.confidence > 0.8) ||
-      message.includes("start over")
-    ) {
-      response = Response.genNuxMessage(this.user);
-    } else if (Number(message)) {
-      response = Order.handlePayload("ORDER_NUMBER");
-    } else if (message.includes("#")) {
-      response = Survey.handlePayload("CSAT_SUGGESTION");
-    } else if (message.includes(i18n.__("care.help").toLowerCase())) {
-      let care = new Care(this.user, this.webhookEvent);
-      response = care.handlePayload("CARE_HELP");
-    } else {
-      response = [
-        Response.genText(
-          i18n.__("fallback.any", {
-            message: event.message.text
-          })
-        ),
-        Response.genText(i18n.__("get_started.guidance")),
-        Response.genQuickReply(i18n.__("get_started.help"), [
-          {
-            title: i18n.__("menu.suggestion"),
-            payload: "CURATION"
-          },
-          {
-            title: i18n.__("menu.help"),
-            payload: "CARE_HELP"
-          },
-          {
-            title: i18n.__("menu.product_launch"),
-            payload: "PRODUCT_LAUNCH"
+  async generateGptResponse(message) {
+    try {
+      // Make an API call to OpenAI GPT
+      const response = await axios.post(
+        "https://api.openai.com/v1/engines/davinci-codex/completions",
+        {
+          prompt: message,
+          max_tokens: 100
+          // Add other parameters as needed based on your requirements
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer YOUR_OPENAI_API_KEY"
           }
-        ])
-      ];
+        }
+      );
+  
+      // Extract the generated response from the OpenAI GPT API
+      return response.data.choices[0].text.trim();
+    } catch (error) {
+      console.error("Error calling GPT API:", error.message);
+      // Handle error appropriately, e.g., return a default response
+      return "An error occurred while processing your message.";
     }
-
-    return response;
   }
 
   // Handles mesage events with attachments
-  handleAttachmentMessage() {
+  async handleAttachmentMessage() {
     let response;
 
     // Get the attachment
