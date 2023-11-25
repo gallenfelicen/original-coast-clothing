@@ -80,8 +80,9 @@ module.exports = class Receive {
     try {
       // Make an API call to OpenAI GPT
       const response = await axios.post(
-        "https://api.openai.com/v1/engines/davinci-codex/completions",
+        "https://api.openai.com/v1/chat/completions",
         {
+          model: "gpt-3.5-turbo-1106",
           prompt: message,
           max_tokens: 100
           // Add other parameters as needed based on your requirements
