@@ -9,6 +9,7 @@
  */
 
 "use strict";
+import { Configuration, OpenAIApi } from "openai";
 
 
 const Curation = require("./curation"),
@@ -22,6 +23,11 @@ const Curation = require("./curation"),
   axios = require("axios"),
   config = require("./config");
   
+const configuration = new Configuration({
+  apiKey: config.gptApiKey,
+});
+
+const openai = new OpenAIApi(configuration);
 
 module.exports = class Receive {
   constructor(user, webhookEvent, isUserRef) {
@@ -81,20 +87,14 @@ module.exports = class Receive {
   async generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
+      const response = await openai.chat.completions.create(
         {
-          "model": "gpt-3.5-turbo",
-          "messages": [{"role": "system", "content": "You are a helpful assistant."},
-          {"role": "user", "content": `Hi I am Gallen, ${message}`}]
+          model: "gpt-3.5-turbo",
+          messages: [{"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": `Hi I am Gallen, ${message}`}],
+          stream: true,
           // Add other parameters as needed based on your requirements
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${config.gptApiKey}`
-          }
-        }
       );
       // Return the response from the API call
         return response.choices[0].message.content;
