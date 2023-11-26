@@ -86,15 +86,14 @@ module.exports = class Receive {
         {
           model: "gpt-3.5-turbo",
           messages: [{role: "system", "content": "You are a helpful assistant."},
-          {role: "user", content: `Hi I am Gallen, ${message}`}],
-          stream: true,
+          {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
-        },
+        }
       );
       // Return the response from the API call
-        return response.choices[0].message.content;
+        return response;
     } catch (error) {
-      console.error("Error calling GPT API:", error.message);
+      console.error("Error calling GPT API:", error.message, response);
       // Handle error appropriately, e.g., return a default response
       return "An error occurred while processing your message.";
     }
