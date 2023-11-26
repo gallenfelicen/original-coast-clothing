@@ -91,9 +91,15 @@ module.exports = class Receive {
         }
       );
       // Return the response from the API call
-        return response;
+    if (response.choices && response.choices.length > 0 && response.choices[0].message) {
+        const messageContent = response.choices[0].message.content;
+        return messageContent;
+    }
+    else {
+      return `An error occurred while processing your message, ${response.choices[0].message.content}.`;
+    }
     } catch (error) {
-      console.error("Error calling GPT API:", error.message, response);
+      console.error("Error calling GPT API:", error.message, response.choices[0].message.content);
       // Handle error appropriately, e.g., return a default response
       return "An error occurred while processing your message.";
     }
