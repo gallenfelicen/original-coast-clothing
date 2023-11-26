@@ -79,14 +79,17 @@ module.exports = class Receive {
     }
   }
 
-  async generateGptResponse(message) {
+  async generateGptResponse(message, previousMessages =[]) {
     try {
       // Make an API call to OpenAI GPT
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
           messages: [{role: "system", "content": "You are a virtual cashier. Ask for customer name, \
-          customer unit, and their order. parse the content into two variables, orderjson and response to client."},
+          customer unit, and their order. parse the content into two variables, orderjson and response to client. \
+          The orderjson follows this strict format: {\"name\": \"John\", \"unit\": \"A\", \"orders\": \"1\"}. \
+          reply all of these content to the client. "},
+          ...previousMessages,
           {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         }
