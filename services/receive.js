@@ -85,7 +85,8 @@ module.exports = class Receive {
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
-          messages: [{role: "system", "content": "You are a helpful assistant."},
+          messages: [{role: "system", "content": "You are a virtual cashier. Ask for customer name, \
+          customer unit, and their order. parse the content into two variables, orderjson and response to client."},
           {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         }
@@ -104,6 +105,7 @@ module.exports = class Receive {
       return "An error occurred while processing your message.";
     }
   }
+  
   async handleTextMessage() {
     console.log(
       "Received text:",
@@ -120,20 +122,6 @@ module.exports = class Receive {
     let response;
     response = [
       Response.genText(gptResponse),
-      Response.genQuickReply(i18n.__("get_started.help"), [
-        {
-          title: i18n.__("care.order"),
-          payload: "CARE_ORDER"
-        },
-        {
-          title: i18n.__("care.billing"),
-          payload: "CARE_BILLING"
-        },
-        {
-          title: i18n.__("care.other"),
-          payload: "CARE_OTHER"
-        }
-      ])
     ];
     console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
 
