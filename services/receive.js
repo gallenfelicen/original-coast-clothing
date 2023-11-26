@@ -35,7 +35,7 @@ module.exports = class Receive {
 
   // Check if the event is a message or postback and
   // call the appropriate handler function
-  handleMessage() {
+  async handleMessage() {
     let event = this.webhookEvent;
 
     let responses;
@@ -49,7 +49,7 @@ module.exports = class Receive {
         } else if (message.attachments) {
           responses = this.handleAttachmentMessage();
         } else if (message.text) {
-          responses = this.handleTextMessage();
+          responses = await this.handleTextMessage();
         }
       } else if (event.postback) {
         responses = this.handlePostback();
@@ -79,10 +79,10 @@ module.exports = class Receive {
     }
   }
 
-  generateGptResponse(message) {
+  async generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
-      const response = openai.chat.completions.create(
+      const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
           messages: [{role: "system", "content": "You are a helpful assistant."},
@@ -104,7 +104,7 @@ module.exports = class Receive {
       return "An error occurred while processing your message.";
     }
   }
-  handleTextMessage() {
+  async handleTextMessage() {
     console.log(
       "Received text:",
       `${this.webhookEvent.message.text} for ${this.user.psid}`
@@ -115,7 +115,7 @@ module.exports = class Receive {
     // check greeting is here and is confident
     let message = event.message.text.trim().toLowerCase();
 
-    let gptResponse = this.generateGptResponse(message);
+    let gptResponse = await this.generateGptResponse(message);
 
     let response;
     response = [
@@ -140,7 +140,7 @@ module.exports = class Receive {
     return response;
   }
 
-  sendMessage(response, delay = 0, isUserRef) {
+  async sendMessage(response, delay = 0, isUserRef) {
     // Check if there is delay in the response
     if (response === undefined || response === null) {
       return;    
@@ -159,7 +159,6 @@ module.exports = class Receive {
         },
         message: response
       };
-      console.log("Sending message", response)
     } else {
       requestBody = {
         recipient: {
@@ -196,6 +195,7 @@ module.exports = class Receive {
     // Persona API does not work for people in EU, until fixed is safer to not use
     delete requestBody["persona_id"];
 
+    console.log("Sending message", response)
     setTimeout(() => GraphApi.callSendApi(requestBody), delay);
   }
 
