@@ -121,7 +121,7 @@ module.exports = class Receive {
   
     // Return the generated response
     return [{text: response}];
-  }]
+  }
 
 
   // Handles mesage events with attachments
