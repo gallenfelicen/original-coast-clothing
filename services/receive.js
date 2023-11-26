@@ -79,10 +79,10 @@ module.exports = class Receive {
     }
   }
 
-  async generateGptResponse(message) {
+  generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
-      const response = await openai.chat.completions.create(
+      const response = openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
           messages: [{role: "system", "content": "You are a helpful assistant."},
@@ -104,7 +104,7 @@ module.exports = class Receive {
       return "An error occurred while processing your message.";
     }
   }
-  async handleTextMessage() {
+  handleTextMessage() {
     console.log(
       "Received text:",
       `${this.webhookEvent.message.text} for ${this.user.psid}`
@@ -115,7 +115,7 @@ module.exports = class Receive {
     // check greeting is here and is confident
     let message = event.message.text.trim().toLowerCase();
 
-    let gptResponse = await this.generateGptResponse(message);
+    let gptResponse = this.generateGptResponse(message);
 
     let response;
     response = [
