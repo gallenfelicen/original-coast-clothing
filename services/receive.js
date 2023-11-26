@@ -116,27 +116,9 @@ module.exports = class Receive {
     let message = event.message.text.trim().toLowerCase();
 
     let response;
-    response = [
-      Response.genText(
-        i18n.__("fallback.any", {
-          message: await this.generateGptResponse(message)
-        })
-      ),
-      Response.genQuickReply(i18n.__("get_started.help"), [
-        {
-          title: i18n.__("menu.suggestion"),
-          payload: "CURATION"
-        },
-        {
-          title: i18n.__("menu.help"),
-          payload: "CARE_HELP"
-        },
-        {
-          title: i18n.__("menu.product_launch"),
-          payload: "PRODUCT_LAUNCH"
-        }
-      ])
-    ];
+    response = await this.generateGptResponse(message);
+    console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
+
     return response;
   }
 
@@ -359,6 +341,7 @@ module.exports = class Receive {
         },
         message: response
       };
+      console.log("Sending message", response)
     } else {
       requestBody = {
         recipient: {
