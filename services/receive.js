@@ -119,7 +119,7 @@ module.exports = class Receive {
     response = await this.generateGptResponse(message);
     console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
 
-    return {text: response};
+    return {text: `${response}`};
   }
 
   // Handles mesage events with attachments
@@ -325,7 +325,8 @@ module.exports = class Receive {
   sendMessage(response, delay = 0, isUserRef) {
     // Check if there is delay in the response
     if (response === undefined || response === null) {
-      return;
+      console.log("Response is undefined",typeof(response),response);
+      return;    
     }
     if ("delay" in response) {
       delay = response["delay"];
