@@ -105,7 +105,61 @@ module.exports = class Receive {
     }
   }
 
-  async handleTextMessage() {
+  handleTextMessage() {
+    console.log(
+      "Received text:",
+      `${this.webhookEvent.message.text} for ${this.user.psid}`
+    );
+
+    let event = this.webhookEvent;
+
+    // check greeting is here and is confident
+    let greeting = this.firstEntity(event.message.nlp, "greetings");
+    let message = event.message.text.trim().toLowerCase();
+
+    let response;
+
+    if (
+      (greeting && greeting.confidence > 0.8) ||
+      message.includes("start over")
+    ) {
+      response = Response.genNuxMessage(this.user);
+    } else if (Number(message)) {
+      response = Order.handlePayload("ORDER_NUMBER");
+    } else if (message.includes("#")) {
+      response = Survey.handlePayload("CSAT_SUGGESTION");
+    } else if (message.includes(i18n.__("care.help").toLowerCase())) {
+      let care = new Care(this.user, this.webhookEvent);
+      response = care.handlePayload("CARE_HELP");
+    } else {
+      response = [
+        Response.genText(
+          i18n.__("fallback.any", {
+            message: event.message.text
+          })
+        ),
+        Response.genText(i18n.__("get_started.guidance")),
+        Response.genQuickReply(i18n.__("get_started.help"), [
+          {
+            title: i18n.__("menu.suggestion"),
+            payload: "CURATION"
+          },
+          {
+            title: i18n.__("menu.help"),
+            payload: "CARE_HELP"
+          },
+          {
+            title: i18n.__("menu.product_launch"),
+            payload: "PRODUCT_LAUNCH"
+          }
+        ])
+      ];
+    }
+    console.log("Generated response:", response); // Log the response
+    return response;
+  }
+
+  async ahandleTextMessage() {
     console.log(
       "Received text:",
       `${this.webhookEvent.message.text} for ${this.user.psid}`
@@ -114,10 +168,14 @@ module.exports = class Receive {
     const message = this.webhookEvent.message.text;
   
     // Make API call to GPT for generating a response
-    const response = await this.generateGptResponse(message);
+    const gptResponse = await this.generateGptResponse(message);
   
     // Now you can use the generated GPT response in your logic
     console.log("Generated GPT response:", gptResponse);
+  
+    // Handle the GPT response based on your application's logic
+    // For simplicity, let's assume the GPT response is used directly
+    const response = Response.genText(gptResponse);
   
     // Return the generated response
     return response;
