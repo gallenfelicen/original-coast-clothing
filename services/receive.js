@@ -116,10 +116,86 @@ module.exports = class Receive {
     let message = event.message.text.trim().toLowerCase();
 
     let response;
-    response = await this.generateGptResponse(message);
+    gptResponse = await this.generateGptResponse(message)
+    response = [
+      Response.genText(gptResponse),
+      Response.genQuickReply(i18n.__("get_started.help"), [
+        {
+          title: i18n.__("care.order"),
+          payload: "CARE_ORDER"
+        },
+        {
+          title: i18n.__("care.billing"),
+          payload: "CARE_BILLING"
+        },
+        {
+          title: i18n.__("care.other"),
+          payload: "CARE_OTHER"
+        }
+      ])
+    ];
     console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
 
-    return {text: `${response}`};
+    return response;
+  }
+
+  sendMessage(response, delay = 0, isUserRef) {
+    // Check if there is delay in the response
+    if (response === undefined || response === null) {
+      return;    
+    }
+    if ("delay" in response) {
+      delay = response["delay"];
+      delete response["delay"];
+    }
+    // Construct the message body
+    let requestBody = {};
+    if (isUserRef) {
+      // For chat plugin
+      requestBody = {
+        recipient: {
+          user_ref: this.user.psid
+        },
+        message: response
+      };
+      console.log("Sending message", response)
+    } else {
+      requestBody = {
+        recipient: {
+          id: this.user.psid
+        },
+        message: response
+      };
+    }
+
+    // Check if there is persona id in the response
+    if ("persona_id" in response) {
+      let persona_id = response["persona_id"];
+      delete response["persona_id"];
+      if (isUserRef) {
+        // For chat plugin
+        requestBody = {
+          recipient: {
+            user_ref: this.user.psid
+          },
+          message: response,
+          persona_id: persona_id
+        };
+      } else {
+        requestBody = {
+          recipient: {
+            id: this.user.psid
+          },
+          message: response,
+          persona_id: persona_id
+        };
+      }
+    }
+    // Mitigate restriction on Persona API
+    // Persona API does not work for people in EU, until fixed is safer to not use
+    delete requestBody["persona_id"];
+
+    setTimeout(() => GraphApi.callSendApi(requestBody), delay);
   }
 
   // Handles mesage events with attachments
@@ -320,66 +396,6 @@ module.exports = class Receive {
       message: response
     };
     GraphApi.callSendApi(requestBody);
-  }
-
-  sendMessage(response, delay = 0, isUserRef) {
-    // Check if there is delay in the response
-    if (response === undefined || response === null) {
-      console.log("Response is undefined",typeof(response),response);
-      return;    
-    }
-    if ("delay" in response) {
-      delay = response["delay"];
-      delete response["delay"];
-    }
-    // Construct the message body
-    let requestBody = {};
-    if (isUserRef) {
-      // For chat plugin
-      requestBody = {
-        recipient: {
-          user_ref: this.user.psid
-        },
-        message: response
-      };
-      console.log("Sending message", response)
-    } else {
-      requestBody = {
-        recipient: {
-          id: this.user.psid
-        },
-        message: response
-      };
-    }
-
-    // Check if there is persona id in the response
-    if ("persona_id" in response) {
-      let persona_id = response["persona_id"];
-      delete response["persona_id"];
-      if (isUserRef) {
-        // For chat plugin
-        requestBody = {
-          recipient: {
-            user_ref: this.user.psid
-          },
-          message: response,
-          persona_id: persona_id
-        };
-      } else {
-        requestBody = {
-          recipient: {
-            id: this.user.psid
-          },
-          message: response,
-          persona_id: persona_id
-        };
-      }
-    }
-    // Mitigate restriction on Persona API
-    // Persona API does not work for people in EU, until fixed is safer to not use
-    delete requestBody["persona_id"];
-
-    setTimeout(() => GraphApi.callSendApi(requestBody), delay);
   }
 
   sendRecurringMessage(notificationMessageToken, delay) {
