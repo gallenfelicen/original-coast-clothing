@@ -119,7 +119,7 @@ module.exports = class Receive {
     response = await this.generateGptResponse(message);
     console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
 
-    return response;
+    return {text: response};
   }
 
   // Handles mesage events with attachments
