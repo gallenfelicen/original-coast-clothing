@@ -114,14 +114,10 @@ module.exports = class Receive {
     const message = this.webhookEvent.message.text;
   
     // Make API call to GPT for generating a response
-    const gptResponse = await this.generateGptResponse(message);
+    const response = await this.generateGptResponse(message);
   
     // Now you can use the generated GPT response in your logic
     console.log("Generated GPT response:", gptResponse);
-  
-    // Handle the GPT response based on your application's logic
-    // For simplicity, let's assume the GPT response is used directly
-    const response = Response.genText(gptResponse);
   
     // Return the generated response
     return response;
