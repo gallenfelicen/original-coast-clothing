@@ -104,25 +104,40 @@ module.exports = class Receive {
       return "An error occurred while processing your message.";
     }
   }
-
   async handleTextMessage() {
     console.log(
       "Received text:",
       `${this.webhookEvent.message.text} for ${this.user.psid}`
     );
-  
-    const message = this.webhookEvent.message.text;
-  
-    // Make API call to GPT for generating a response
-    const response = await this.generateGptResponse(message);
-  
-    // Now you can use the generated GPT response in your logic
-    console.log("Generated GPT response:", gptResponse);
-  
-    // Return the generated response
-    return [{text: response}];
-  }
 
+    let event = this.webhookEvent;
+
+    // check greeting is here and is confident
+    let message = event.message.text.trim().toLowerCase();
+
+    let response;
+    response = [
+      Response.genText(
+        i18n.__("fallback.any", {
+          message: await this.generateGptResponse(message)
+        })
+      ),
+      Response.genQuickReply(i18n.__("get_started.help"), [
+        {
+          title: i18n.__("menu.suggestion"),
+          payload: "CURATION"
+        },
+        {
+          title: i18n.__("menu.help"),
+          payload: "CARE_HELP"
+        },
+        {
+          title: i18n.__("menu.product_launch"),
+          payload: "PRODUCT_LAUNCH"
+        }
+      ])
+    ];
+  }
 
   // Handles mesage events with attachments
   async handleAttachmentMessage() {
