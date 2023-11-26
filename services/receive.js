@@ -137,6 +137,7 @@ module.exports = class Receive {
         }
       ])
     ];
+    return response;
   }
 
   // Handles mesage events with attachments
