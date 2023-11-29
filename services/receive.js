@@ -103,7 +103,7 @@ module.exports = class Receive {
   async generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
-      const previousMessages = await this.getMessages(this.user.psid);
+      // const previousMessages = await this.getMessages(this.user.psid);
       console.log("previousMessages: ", previousMessages);
 
       const response = await openai.chat.completions.create(
@@ -119,7 +119,7 @@ module.exports = class Receive {
             }. If the customer has not provided the values to each key, ask the customer to provide the missing values. If the customer has provided the values to each key, ask the customer to confirm the order.\
             If the customer confirms the order, reply with {order: confirmed}. If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
           //...previousMessages,
-          {role: "user", content: `${message}`}]
+          {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         }
       );
