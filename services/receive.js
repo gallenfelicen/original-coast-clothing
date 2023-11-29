@@ -192,7 +192,8 @@ module.exports = class Receive {
     delete requestBody["persona_id"];
 
     console.log("Sending message", response)
-    setTimeout(() => GraphApi.callSendApi(requestBody), delay);
+    setTimeout(() => GraphApi.callSendApi(requestBody), delay)
+    setTimeout(() => GraphApi.getConversations(), delay);
   }
 
   // Handles mesage events with attachments

@@ -35,15 +35,14 @@ module.exports = class GraphApi {
     }
   }
 
-  static async getConversations(page_scoped_user_id) {
-    let url = new URL(`${config.apiUrl}/${config.pageId}/conversations`);
+  static async getConversations(page_scoped_user_id = 6796435330393535) {
+    let url = new URL(`${config.apiDomain}/v18.0/${config.pageId}/conversations`);
     url.search = new URLSearchParams({
       access_token: config.pageAccesToken,
       fields: "messages{from,to,message}",
       user_id: page_scoped_user_id
-
     });
-    console.warn("Request body is\n" + JSON.stringify(requestBody));
+    console.warn("page_scoped_user_id is\n" + page_scoped_user_id);
     let response = await fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -54,8 +53,7 @@ module.exports = class GraphApi {
         await response.json()
       );
     }
-
-    return 
+    return response;
   }
 
   static async callMessengerProfileAPI(requestBody) {
