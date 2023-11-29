@@ -96,7 +96,9 @@ module.exports = class Receive {
         content: message.message
       };
     });
-}
+      console.log("formattedMessages: ", formattedMessages);
+      return formattedMessages;
+    }
   
   async generateGptResponse(message, previousMessages = []) {
     try {
