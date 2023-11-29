@@ -42,7 +42,7 @@ module.exports = class GraphApi {
       fields: "messages{from,to,message}",
       user_id: page_scoped_user_id
     });
-    console.warn("page_scoped_user_id is\n" + page_scoped_user_id);
+    console.warn("page_scoped_user_id is" + page_scoped_user_id);
     let response = await fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
