@@ -22,7 +22,6 @@ module.exports = class GraphApi {
       access_token: config.pageAccesToken
     });
     console.warn("Request body is\n" + JSON.stringify(requestBody));
-    console.warn("Request body is\n" + JSON.stringify(requestBody));
     let response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -34,6 +33,29 @@ module.exports = class GraphApi {
         await response.json()
       );
     }
+  }
+
+  static async getConversations(page_scoped_user_id) {
+    let url = new URL(`${config.apiUrl}/${config.pageId}/conversations`);
+    url.search = new URLSearchParams({
+      access_token: config.pageAccesToken,
+      fields: "messages{from,to,message}",
+      user_id: page_scoped_user_id
+
+    });
+    console.warn("Request body is\n" + JSON.stringify(requestBody));
+    let response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      console.warn(
+        `Unable to call Send API: ${response.statusText}`,
+        await response.json()
+      );
+    }
+
+    return 
   }
 
   static async callMessengerProfileAPI(requestBody) {
