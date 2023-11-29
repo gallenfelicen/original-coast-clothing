@@ -100,11 +100,11 @@ module.exports = class Receive {
       return formattedMessages;
     }
   
-  async generateGptResponse(message, previousMessages = []) {
+  async generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
       const previousMessages = await this.getMessages(this.user.psid);
-      console.log("previousMessages: ", previousMessages);
+      console.log("previousMessages: ", previousMessages, "thisUser: ", this.user.psid);
 
       const response = await openai.chat.completions.create(
         {

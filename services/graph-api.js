@@ -54,7 +54,7 @@ module.exports = class GraphApi {
       );
     }
     else {
-      console.warn("Response is " + JSON.stringify(response));
+      console.log("Response is " + JSON.stringify(response));
     }
     return response;
   }
