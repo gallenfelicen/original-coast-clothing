@@ -85,8 +85,8 @@ module.exports = class Receive {
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
-          messages: [{role: "system", "content": "You will reply in json, with two roles: cashier and order. The first message should be from the cashier {cashier:}, and the second message should be from the order and should follow this format: \
-          { Customer : XXX,\
+          messages: [{role: "system", "content": "You will reply in json, with two roles: cashier and order. The first part of message is from the cashier {cashier:}, and the second part of message is from the order and should follow this format: \
+          {Customer : XXX,\
             Order: { order1: order1_quantity, order2: order2_quantity, ...},\
             Tower: TX XXXX,\
             Time: XX:XX,\
