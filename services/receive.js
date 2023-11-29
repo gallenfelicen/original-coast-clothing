@@ -103,7 +103,7 @@ module.exports = class Receive {
   async generateGptResponse(message, previousMessages = []) {
     try {
       // Make an API call to OpenAI GPT
-      // const previousMessages = await this.getMessages(this.user.psid);
+      const previousMessages = await this.getMessages(this.user.psid);
       console.log("previousMessages: ", previousMessages);
 
       const response = await openai.chat.completions.create(
@@ -118,7 +118,7 @@ module.exports = class Receive {
             Payment Type: XXXX,\
             }. If the customer has not provided the values to each key, ask the customer to provide the missing values. If the customer has provided the values to each key, ask the customer to confirm the order.\
             If the customer confirms the order, reply with {order: confirmed}. If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
-          ...previousMessages,
+          //...previousMessages,
           {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         }
@@ -215,8 +215,8 @@ module.exports = class Receive {
     // Persona API does not work for people in EU, until fixed is safer to not use
     delete requestBody["persona_id"];
 
-    console.log("Sending message", response)
-    setTimeout(() => GraphApi.callSendApi(requestBody), delay)
+    console.log("Sending message", response);
+    setTimeout(() => GraphApi.callSendApi(requestBody), delay);
 
   }
   
