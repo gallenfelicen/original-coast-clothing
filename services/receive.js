@@ -85,10 +85,15 @@ module.exports = class Receive {
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
-          messages: [{role: "system", "content": "You are a virtual cashier. Ask for customer name, \
-          customer unit, and their order. parse the content into two variables, orderjson and response to client. \
-          The orderjson follows this strict format: {\"name\": \"John\", \"unit\": \"A\", \"orders\": \"1\"}. \
-          reply all of these content to the client. "},
+          messages: [{role: "system", "content": "You will reply in json, with two roles: cashier and order. The first message should be from the cashier {cashier:}, and the second message should be from the order and should follow this format: \
+          { Customer : XXX,\
+            Order: { order1: order1_quantity, order2: order2_quantity, ...},\
+            Tower: TX XXXX,\
+            Time: XX:XX,\
+            Total: sum(ordern_price*ordern_quantity),\
+            Payment Type: XXXX,\
+            }. If the customer has not provided the values to each key, ask the customer to provide the missing values. If the customer has provided the values to each key, ask the customer to confirm the order.\
+            If the customer confirms the order, reply with {order: confirmed}. If the customer does not confirm the order, reply with {order: not confirmed}."},
           ...previousMessages,
           {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
