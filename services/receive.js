@@ -79,9 +79,32 @@ module.exports = class Receive {
     }
   }
 
-  async generateGptResponse(message, previousMessages =[]) {
+  async getMessages(page_scoped_user_id = 6796435330393535) {
+  
+    let data = await GraphApi.getConversations(page_scoped_user_id);
+    const messages = data.data[0].messages.data;
+  
+    const formattedMessages = messages.map(message => {
+      if (message.from.name.startsWith('Icy Threads')) {
+        role = `cashier`;
+      } else {
+        role = message.from.name;
+      }
+  
+      return {
+        role: role,
+        content: message.message
+      };
+    });
+      console.log("formattedMessages: ", formattedMessages);
+      return formattedMessages;
+    }
+  
+  async generateGptResponse(message) {
     try {
       // Make an API call to OpenAI GPT
+      const previousMessages = await this.getMessages(this.user.psid);
+
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
@@ -193,7 +216,27 @@ module.exports = class Receive {
 
     console.log("Sending message", response)
     setTimeout(() => GraphApi.callSendApi(requestBody), delay)
-    setTimeout(() => GraphApi.getConversations(), delay);
+
+  }
+  
+  async getMessages(page_scoped_user_id = 6796435330393535) {
+  
+  let data = await GraphApi.getConversations(page_scoped_user_id);
+  const messages = data.data[0].messages.data;
+
+  const formattedMessages = messages.map(message => {
+    if (message.from.name.startsWith('Icy Threads')) {
+      role = `cashier`;
+    } else {
+      role = message.from.name;
+    }
+
+    return {
+      role: role,
+      content: message.message
+    };
+  });
+    return formattedMessages;
   }
 
   // Handles mesage events with attachments
