@@ -84,12 +84,14 @@ module.exports = class Receive {
       // Make an API call to Conversations API
       GraphApi.getConversations(page_scoped_user_id)
         .then(data => {
-          console.log('Received data:', data); // Handle the received data
+          console.log('From getMessages, Received data:', data); // Handle the received data
         })
         .catch(error => {
           console.error('Error:', error); // Handle any errors that occurred
         });
+      console.log("data.data[0]= ", data.data[0]);
       const messages = data.data[0].messages.data;
+      console.log("Messages: ", messages);
       const formattedMessages = messages.map(message => {
         if (message.from.name.startsWith('Icy Threads')) {
           role = `cashier`;
@@ -97,11 +99,12 @@ module.exports = class Receive {
           role = message.from.name;
         }
         return {
+
           role: role,
           content: message.message
         };
       });
-        console.log("formattedMessages: ", formattedMessages);
+        
         return formattedMessages;
     } catch (error) {
       console.error("Error calling Conversations Graph API:", error.message);
