@@ -89,7 +89,7 @@ module.exports = class Receive {
       // Format messages
       let role = ``;
 
-      const formattedMessages = messages.map(message => {
+      let formattedMessages = messages.map(message => {
         if (message.from.name.startsWith('Icy Threads')) {
           role = `cashier`;
         } else {
