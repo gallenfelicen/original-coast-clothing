@@ -91,13 +91,13 @@ module.exports = class Receive {
 
       var formattedMessages = messages.map(message => {
         if (message.from.name.startsWith('Icy Threads')) {
-          role = `cashier`;
+          role = `assistant`;
         } else {
-          role = message.from.name;
+          role = 'user';
         }
         return {
           role: role,
-          content: message.message,
+          content: `My name is ${message.from.name}, ${message.message}, time written: ${message.created_time}`,
           time: message.created_time
         };
       });
@@ -134,25 +134,23 @@ module.exports = class Receive {
       // Make an API call to OpenAI GPT
       const previousMessages = await this.getMessages(this.user.psid);
       console.log("previousMessages: ", previousMessages, "PSID: ",this.user.psid);
-      console.log("previousMessages[0]: ", previousMessages[0]);
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
-          messages: [
-          {role: "system", content: "You will always reply in json, with two keys: cashier and order. The value of the cashier key is the message from the \
+          messages: [...previousMessages,
+          {role: "system", content: "The assistant will always reply in json, with two keys: cashier and order. The value of the cashier key is the message from the \
           cashier {cashier:}, and the value of the order key is from the order and should follow this format: \
           {Customer : XXX,\
             Order: { order1: order1_quantity, order2: order2_quantity, ...},\
             Tower: XXXX,\
-            Time: XX:XX,\
             Total: sum(ordern_price*ordern_quantity),\
             Payment Type: XXXX,\
-            }. If the customer has not provided the values to each key, ask the customer to provide the missing values. \
+            Note: XXXXXXXXXXXX}. \
+            If the customer has not provided the values to each key, ask the customer to provide the missing values. \
             If the customer has provided the values to each key, ask the customer to confirm the order.\
             If the customer confirms the order, reply with {order: confirmed}. \
             If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
-          //previousMessages[0],
-          {role: "Gallen Leslei Felicen", content: `${message}`}]
+          {role: "user", content: `${message}`}]
           // Add other parameters as needed based on your requirements
         }
       );
