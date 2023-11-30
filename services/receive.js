@@ -81,8 +81,7 @@ module.exports = class Receive {
 
   async getMessages(page_scoped_user_id = 6796435330393535) {
     try {
-      delay = 0;
-      await new Promise(resolve => setTimeout(resolve, delay));
+      // Make an API call to Conversations API
       const data = await GraphApi.getConversations(page_scoped_user_id);
       const messages = data.data[0].messages.data;
       const formattedMessages = messages.map(message => {
