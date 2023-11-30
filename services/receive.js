@@ -83,7 +83,7 @@ module.exports = class Receive {
     try {
       // Make an API call to Conversations API and await its resolution
       const data = await GraphApi.getConversations(page_scoped_user_id)
-      console.log('From getMessages, Received data:', data);
+      //console.log('From getMessages, Received data:', data);
       // Process data
       const messages = data.data[0].messages.data;
       // Format messages
@@ -118,7 +118,7 @@ module.exports = class Receive {
       // Remove the "time" key from all arrays
       const filteredMessages = formattedMessages.map(({ role, content }) => ({ role, content })).reverse();
 
-      console.log('From getMessages, filteredMessages:', filteredMessages);
+      //console.log('From getMessages, filteredMessages:', filteredMessages);
       return filteredMessages;
       
     } catch (error) {
@@ -150,7 +150,7 @@ module.exports = class Receive {
             If the customer has provided the values to each key, ask the customer to confirm the order.\
             If the customer confirms the order, reply with {order: confirmed}. \
             If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
-          ...previousMessages,
+          //...previousMessages,
           {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         }
