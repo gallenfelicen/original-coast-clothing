@@ -137,7 +137,7 @@ module.exports = class Receive {
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
-          messages: [...previousMessages,
+          messages: [
           {role: "system", "content": "You will always reply in json, with two keys: cashier and order. The value of the cashier key is the message from the \
           cashier {cashier:}, and the value of the order key is from the order and should follow this format: \
           {Customer : XXX,\
@@ -150,7 +150,8 @@ module.exports = class Receive {
             If the customer has provided the values to each key, ask the customer to confirm the order.\
             If the customer confirms the order, reply with {order: confirmed}. \
             If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
-          {role: "user", content: `${message}`}]
+          ...previousMessages,
+          {role: "user", content: `Hi I am Gallen, ${message}`}]
           // Add other parameters as needed based on your requirements
         }
       );
