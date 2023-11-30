@@ -138,9 +138,10 @@ module.exports = class Receive {
         {
           model: "gpt-3.5-turbo",
           messages: [...previousMessages,
-          {role: "system", content: "The assistant will always reply in json, with two keys: cashier and order. The value of the cashier key is the message from the \
-          cashier {cashier:}, and the value of the order key is from the order and should follow this format: \
-          {Customer : XXX,\
+          {role: "system", content: " Reply format: \
+            {\
+            cashier: `XXXX`,\
+            Order: {Customer : XXX,\
             Order: { order1: order1_quantity, order2: order2_quantity, ...},\
             Tower: XXXX,\
             Total: sum(ordern_price*ordern_quantity),\
@@ -155,9 +156,15 @@ module.exports = class Receive {
         }
       );
       // Return the response from the API call
+    
     if (response.choices && response.choices.length > 0 && response.choices[0].message) {
         const messageContent = response.choices[0].message.content;
-        return messageContent;
+        try {
+          var jsonObject = JSON.parse(messageContent);
+          return jsonObject.cashier, jsonObject.order;
+        } catch (e) {
+          return messageContent;
+        }
     }
     else {
       return `An error occurred while processing your message, ${response.choices[0].message.content}.`;
