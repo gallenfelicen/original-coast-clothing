@@ -42,19 +42,22 @@ module.exports = class GraphApi {
       fields: "messages{from,to,message}",
       user_id: page_scoped_user_id
     });
+
+    const requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
     console.warn("page_scoped_user_id is " + page_scoped_user_id);
-    let response = await fetch(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+    let response = await fetch(url, requestOptions)
+      .then(response => response.json()) // Use response.json() to parse JSON response
+      .then(result => console.log(result))
+      .catch(error => console.error('Error:', error));
     if (!response.ok) {
       console.warn(
         `Unable to call Send API: ${response.statusText}`,
         await response.json()
       );
-    }
-    else {
-      console.log("Response is " + JSON.stringify(response));
     }
     return response;
   }
