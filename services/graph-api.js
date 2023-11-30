@@ -51,16 +51,9 @@ module.exports = class GraphApi {
     console.warn("page_scoped_user_id is " + page_scoped_user_id);
     let response = await fetch(url, requestOptions)
       .then(response => response.json()) // Use response.json() to parse JSON response
-      .then(result => console.log(result))
-      .catch(error => console.error('Error:', error));
-    if (response.ok) {
-      console.log(`Conversations API Request sent.`);
-    } else {
-      console.warn(
-        `Unable to getConversations: ${response.statusText}`,
-        await response.json()
-      );
-    }
+      .then(result => console.log('Fetch result: ',result))
+      .catch(error => console.error('Error:',error));
+    console.log(`Conversations API Request sent.`);
     return response;
   }
 
