@@ -49,19 +49,20 @@ module.exports = class GraphApi {
     };
 
     console.warn("page_scoped_user_id is " + page_scoped_user_id);
-    let response = await fetch(url, requestOptions)
+    let response = fetch(url, requestOptions)
       .then(response => response.json()) // Use response.json() to parse JSON response
-      .then(result => console.log('Fetch result: ', result))
+      .then(result => {
+        console.log('Fetch result: ', result);
+        console.log(`Conversations API Request sent. response.data[0].messages = `, response.data[0].messages);
+      })
       .catch(error => console.error('Error:',error));
-    console.log(`Conversations API Request sent. response.data[0].messages = `, response.data);
-
-    return response;
   }
 
   static async callMessengerProfileAPI(requestBody) {
     // Send the HTTP request to the Messenger Profile API
 
-    console.log(`Setting Messenger Profile for app ${config.appId}`);
+    console.log(`Setting Messenger Profile for 
+    app ${config.appId}`);
     let url = new URL(`${config.apiUrl}/me/messenger_profile`);
     url.search = new URLSearchParams({
       access_token: config.pageAccesToken

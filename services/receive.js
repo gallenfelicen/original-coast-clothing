@@ -82,7 +82,13 @@ module.exports = class Receive {
   async getMessages(page_scoped_user_id = 6796435330393535) {
     try {
       // Make an API call to Conversations API
-      const data = await GraphApi.getConversations(page_scoped_user_id);
+      GraphApi.getConversations(page_scoped_user_id)
+      .then(data => {
+        console.log('Received data:', data); // Handle the received data
+      })
+      .catch(error => {
+        console.error('Error:', error); // Handle any errors that occurred
+      });
       const messages = data.data[0].messages.data;
       const formattedMessages = messages.map(message => {
         if (message.from.name.startsWith('Icy Threads')) {
