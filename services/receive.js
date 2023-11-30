@@ -88,6 +88,7 @@ module.exports = class Receive {
       const messages = data.data[0].messages.data;
       // Format messages
       let role = ``;
+
       const formattedMessages = messages.map(message => {
         if (message.from.name.startsWith('Icy Threads')) {
           role = `cashier`;
@@ -96,11 +97,33 @@ module.exports = class Receive {
         }
         return {
           role: role,
-          content: message.message
+          content: message.message,
+          time: message.created_time
         };
       });
-      console.log('From getMessages, Formatted messages:', formattedMessages);
+
+      // Get the date of the first (latest) message
+      const firstDate = new Date(formattedMessages[0].time).toISOString().slice(0, 10);
+
+      // Find the index where the date changes
+      let index = formattedMessages.findIndex(
+        (message) => new Date(message.time).toISOString().slice(0, 10) !== firstDate
+      );
+
+      // If the date changes, remove the messages after the date change
+      if (index !== -1) {
+        formattedMessages = formattedMessages.slice(0, index);
+      }
+
+      // Remove the "time" key from all arrays
+      formattedMessages = formattedMessages.map(({ role, content }) => ({ role, content }));
+
+      // Reverse the array
+      formattedMessages = formattedMessages.reverse();
+
+      console.log('From getMessages, formattedMessages:', formattedMessages);
       return formattedMessages;
+      
     } catch (error) {
       console.error("Error calling Conversations Graph API:", error.message);
       // Handle error appropriately, e.g., return a default response

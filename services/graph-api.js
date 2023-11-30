@@ -39,7 +39,7 @@ module.exports = class GraphApi {
     let url = new URL(`${config.apiDomain}/v18.0/${config.pageId}/conversations`);
     url.search = new URLSearchParams({
       access_token: config.pageAccesToken,
-      fields: "messages{from,to,message}",
+      fields: "messages{from,to,message,created_time}",
       user_id: page_scoped_user_id
     });
 
