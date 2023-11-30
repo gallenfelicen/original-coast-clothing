@@ -138,8 +138,8 @@ module.exports = class Receive {
         {
           model: "gpt-3.5-turbo",
           messages: [...previousMessages,
-          {role: "system", content: "You will always reply in json, with two keys: cashier and order. The value of the cashier key is the message from the \
-          cashier {cashier:}, and the value of the order key is from the order and should follow this format: \
+          {role: "system", content: "You/Assitant will STRICTLY reply in json, with two keys: cashier and order. The value of the cashier key is the message on how you would normally reply as a cashier \
+          ,and the value of the order key is from the order and should follow this format: \
             {\
             cashier: `XXXX`,\
             Order: {Customer : XXX,\
@@ -162,7 +162,7 @@ module.exports = class Receive {
         const messageContent = response.choices[0].message.content;
         try {
           var jsonObject = JSON.parse(messageContent);
-          return jsonObject.cashier, jsonObject.order;
+          return messageContent;//jsonObject.cashier, jsonObject.order;
         } catch (e) {
           return messageContent;
         }
