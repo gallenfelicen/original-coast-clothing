@@ -49,11 +49,12 @@ module.exports = class GraphApi {
     };
 
     console.warn("page_scoped_user_id is " + page_scoped_user_id);
-    let response = fetch(url, requestOptions)
+    return fetch(url, requestOptions)
       .then(response => response.json()) // Use response.json() to parse JSON response
       .then(result => {
         console.log('Fetch result: ', result);
         console.log(`Conversations API Request sent. response.data = `, result.data[0].messages);
+        return result;
       })
       .catch(error => console.error('Error:',error));
   }

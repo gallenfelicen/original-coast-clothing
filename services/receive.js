@@ -83,12 +83,12 @@ module.exports = class Receive {
     try {
       // Make an API call to Conversations API
       GraphApi.getConversations(page_scoped_user_id)
-      .then(data => {
-        console.log('Received data:', data); // Handle the received data
-      })
-      .catch(error => {
-        console.error('Error:', error); // Handle any errors that occurred
-      });
+        .then(data => {
+          console.log('Received data:', data); // Handle the received data
+        })
+        .catch(error => {
+          console.error('Error:', error); // Handle any errors that occurred
+        });
       const messages = data.data[0].messages.data;
       const formattedMessages = messages.map(message => {
         if (message.from.name.startsWith('Icy Threads')) {
