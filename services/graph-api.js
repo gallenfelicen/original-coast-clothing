@@ -53,7 +53,7 @@ module.exports = class GraphApi {
       .then(response => response.json()) // Use response.json() to parse JSON response
       .then(result => console.log('Fetch result: ', result))
       .catch(error => console.error('Error:',error));
-    console.log(`Conversations API Request sent. response.data[0].messages = `, response.data[0].messages);
+    console.log(`Conversations API Request sent. response.data[0].messages = `, response.data);
 
     return response;
   }
