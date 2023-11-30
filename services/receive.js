@@ -134,6 +134,7 @@ module.exports = class Receive {
       // Make an API call to OpenAI GPT
       const previousMessages = await this.getMessages(this.user.psid);
       console.log("previousMessages: ", previousMessages, "PSID: ",this.user.psid);
+      console.log("previousMessages[0]: ", previousMessages[0]);
       const response = await openai.chat.completions.create(
         {
           model: "gpt-3.5-turbo",
@@ -150,8 +151,8 @@ module.exports = class Receive {
             If the customer has provided the values to each key, ask the customer to confirm the order.\
             If the customer confirms the order, reply with {order: confirmed}. \
             If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
-          ...previousMessages,
-          {role: "user", content: `Hi I am Gallen, ${message}`}]
+          ...previousMessages[0],
+          {role: "user", content: `${message}`}]
           // Add other parameters as needed based on your requirements
         }
       );
