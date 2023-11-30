@@ -49,7 +49,7 @@ module.exports = class GraphApi {
     };
 
     console.warn("page_scoped_user_id is " + page_scoped_user_id);
-    return fetch(url, requestOptions)
+    return await fetch(url, requestOptions)
       .then(response => response.json()) // Use response.json() to parse JSON response
       .then(result => {
         console.log('Fetch result: ', result);
