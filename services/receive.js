@@ -80,10 +80,15 @@ module.exports = class Receive {
   }
 
   async getMessages(page_scoped_user_id = 6796435330393535) {
-  
-    const data = await GraphApi.getConversations(page_scoped_user_id);
-    const messages = data.data[0].messages.data;
-  
+    try {
+      await new Promise(resolve => setTimeout(resolve, delay));
+      const data = await GraphApi.getConversations(page_scoped_user_id);
+      const messages = data.data[0].messages.data;
+    } catch (error) {
+      console.error("Error calling Graph API:", error.message);
+      // Handle error appropriately, e.g., return a default response
+      return [];
+    }
     const formattedMessages = messages.map(message => {
       if (message.from.name.startsWith('Icy Threads')) {
         role = `cashier`;
@@ -99,11 +104,11 @@ module.exports = class Receive {
       console.log("formattedMessages: ", formattedMessages);
       return formattedMessages;
     }
-  
+
   async generateGptResponse(message, previousMessages = []) {
     try {
       // Make an API call to OpenAI GPT
-      // const previousMessages = await this.getMessages(this.user.psid);
+      // const previousMessages = await this.getMessages(this.user.psid); --broken
       console.log("previousMessages: ", previousMessages, "PSID: ",this.user.psid);
 
       const response = await openai.chat.completions.create(
