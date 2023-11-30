@@ -53,9 +53,11 @@ module.exports = class GraphApi {
       .then(response => response.json()) // Use response.json() to parse JSON response
       .then(result => console.log(result))
       .catch(error => console.error('Error:', error));
-    if (!response.ok) {
+    if (response.ok) {
+      console.log(`Conversations API Request sent.`);
+    } else {
       console.warn(
-        `Unable to call Send API: ${response.statusText}`,
+        `Unable to getConversations: ${response.statusText}`,
         await response.json()
       );
     }

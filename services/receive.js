@@ -98,7 +98,7 @@ module.exports = class Receive {
         console.log("formattedMessages: ", formattedMessages);
         return formattedMessages;
     } catch (error) {
-      console.error("Error calling Graph API:", error.message);
+      console.error("Error calling Conversations Graph API:", error.message);
       // Handle error appropriately, e.g., return a default response
       return [];
     }
