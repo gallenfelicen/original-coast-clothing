@@ -12,11 +12,10 @@ const GraphApi = require("./graph-api"),
 config = require("./config"),
 OpenAI = require("openai");
 
+const openai = new OpenAI({ apiKey: config.gptApiKey, });
 module.exports = class Assistant {
 constructor() {
-  this.openai = new OpenAI({
-    apiKey: config.gptApiKey,
-  });
+  this.context = {};
 }
 
   async getMessages(page_scoped_user_id = 6796435330393535) {
