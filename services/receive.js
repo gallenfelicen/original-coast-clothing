@@ -20,12 +20,9 @@ const Curation = require("./curation"),
   i18n = require("../i18n.config"),
   axios = require("axios"),
   config = require("./config"),
-  OpenAI = require("openai");
+  OpenAI = require("openai"),
   assistant = require("./assistant");
   
-const openai = new OpenAI({
-  apiKey: config.gptApiKey,
-});
 
 module.exports = class Receive {
   constructor(user, webhookEvent, isUserRef) {
