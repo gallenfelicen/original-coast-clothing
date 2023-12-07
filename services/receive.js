@@ -91,7 +91,7 @@ module.exports = class Receive {
     // check greeting is here and is confident
     let message = event.message.text.trim().toLowerCase();
 
-    let gptResponse = await assistant.generateGptResponse(message);
+    let gptResponse = await assistant.generateGptResponse(message, this.user);
 
     let response;
     response = [

@@ -68,7 +68,7 @@ constructor() {
   }
   }       
 
-  async generateGptResponse(message, previousMessages = [], user) {
+  async generateGptResponse(message, user, previousMessages = []) {
   try {
   // Make an API call to OpenAI GPT
   const previousMessages = await this.getMessages(user.psid);
