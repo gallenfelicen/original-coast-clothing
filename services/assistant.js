@@ -19,55 +19,54 @@ constructor() {
   });
 }
 
-async getMessages(page_scoped_user_id = 6796435330393535) {
-try {
-  // Make an API call to Conversations API and await its resolution
-  const data = await GraphApi.getConversations(page_scoped_user_id)
-  //console.log('From getMessages, Received data:', data);
-  // Process data
-  const messages = data.data[0].messages.data;
-  // Format messages
-  let role = ``;
+  async getMessages(page_scoped_user_id = 6796435330393535) {
+  try {
+    // Make an API call to Conversations API and await its resolution
+    const data = await GraphApi.getConversations(page_scoped_user_id)
+    //console.log('From getMessages, Received data:', data);
+    // Process data
+    const messages = data.data[0].messages.data;
+    // Format messages
+    let role = ``;
 
-  var formattedMessages = messages.map(message => {
-  if (message.from.name.startsWith('Icy Threads')) {
-    role = `assistant`;
-  } else {
-    role = 'user';
+    var formattedMessages = messages.map(message => {
+    if (message.from.name.startsWith('Icy Threads')) {
+      role = `assistant`;
+    } else {
+      role = 'user';
+    }
+    return {
+      role: role,
+    content: `My name is ${message.from.name}, ${message.message}, time written: ${message.created_time}`,
+      time: message.created_time
+    };
+    });
+
+    // Get the date of the first (latest) message
+    const firstDate = new Date(formattedMessages[0].time).toISOString().slice(0, 10);
+
+    // Find the index where the date changes
+    let index = formattedMessages.findIndex(
+    (element) => new Date(element.time).toISOString().slice(0, 10) !== firstDate
+    );
+
+    // If the date changes, remove the messages after the date change.
+    if (index !== -1) {
+    formattedMessages = formattedMessages.slice(1, index); // Remove the first message (the greeting message) and the messages after the date change
+    }
+
+    // Remove the "time" key from all arrays
+    const filteredMessages = formattedMessages.map(({ role, content }) => ({ role, content })).reverse();
+
+    //console.log('From getMessages, filteredMessages:', filteredMessages);
+    return filteredMessages;
+    
+  } catch (error) {
+    console.error("Error calling Conversations Graph API:", error.message);
+    // Handle error appropriately, e.g., return a default response
+    return [];
   }
-  return {
-    role: role,
-  content: `My name is ${message.from.name}, ${message.message}, time written: ${message.created_time}`,
-    time: message.created_time
-  };
-  });
-
-  // Get the date of the first (latest) message
-  const firstDate = new Date(formattedMessages[0].time).toISOString().slice(0, 10);
-
-  // Find the index where the date changes
-  let index = formattedMessages.findIndex(
-  (element) => new Date(element.time).toISOString().slice(0, 10) !== firstDate
-  );
-
-  // If the date changes, remove the messages after the date change.
-  if (index !== -1) {
-  formattedMessages = formattedMessages.slice(1, index); // Remove the first message (the greeting message) and the messages after the date change
-  }
-
-  // Remove the "time" key from all arrays
-  const filteredMessages = formattedMessages.map(({ role, content }) => ({ role, content })).reverse();
-
-  //console.log('From getMessages, filteredMessages:', filteredMessages);
-  return filteredMessages;
-  
-} catch (error) {
-  console.error("Error calling Conversations Graph API:", error.message);
-  // Handle error appropriately, e.g., return a default response
-  return [];
-}
-
-}       
+  }       
 
   async generateGptResponse(message, previousMessages = [], user) {
   try {

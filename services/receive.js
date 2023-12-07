@@ -10,6 +10,8 @@
 
 "use strict";
 
+
+
 const Curation = require("./curation"),
   Order = require("./order"),
   Lead = require("./lead"),
@@ -21,8 +23,9 @@ const Curation = require("./curation"),
   axios = require("axios"),
   config = require("./config"),
   OpenAI = require("openai"),
-  assistant = require("./assistant");
+  Assistant = require("./assistant");
   
+const assistant = new Assistant();
 
 module.exports = class Receive {
   constructor(user, webhookEvent, isUserRef) {
