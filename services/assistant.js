@@ -8,6 +8,7 @@
  */
 
 "use strict";
+const { name } = require("ejs");
 const GraphApi = require("./graph-api"),
 config = require("./config"),
 OpenAI = require("openai");
@@ -17,6 +18,7 @@ module.exports = class Assistant {
 constructor() {
   this.context = {};
 }
+
 
   async getMessages(page_scoped_user_id = 6796435330393535) {
   try {
@@ -79,31 +81,46 @@ constructor() {
     {role: "system", content: "You/Assitant will STRICTLY reply in json, with two keys: cashier and order. The value of the cashier key is the message on how you would normally reply as a cashier \
     ,and the value of the order key is from the order and should follow this format: \
       {\
-      cashier: `XXXX`,\
-      Order: {Customer : XXX,\
-      Order: { order1: order1_quantity, order2: order2_quantity, ...},\
-      Tower: XXXX,\
-      Total: sum(ordern_price*ordern_quantity),\
-      Payment Type: XXXX,\
-      Note: XXXXXXXXXXXX}. \
-      If the customer has not provided the values to each key, ask the customer to provide the missing values. \
-      If the customer has provided the values to each key, ask the customer to confirm the order.\
-      If the customer confirms the order, reply with {order: confirmed}. \
-      If the customer does not confirm the order, reply with {order: not confirmed}. Always reply in json"},
+      'cashier': `XXXX`,\
+      'order': \
+      {\
+      'name':'XXXXXXXXXXXX',\
+      'items': { 'item_1': 'item_1_quantity', 'item_2': 'item_2_quantity', ...},\
+      'Payment Type': 'XXXX',\
+      'time': 'XXXX',\
+      'Note': 'XXXXXXXXXXXX'}. \
+      }\
+      Get the name, items, payment type, time, and note from the message content.\
+      If the customer has not provided the payment type and order, ask the customer to provide the missing values."},
     {role: "user", content: `${message}`}]
-    // Add other parameters as needed based on your requirements
-    }
-  );
-  // Return the response from the API call
+    });
 
   if (response.choices && response.choices.length > 0 && response.choices[0].message) {
-      const messageContent = response.choices[0].message.content;
-      try {
-      var jsonObject = JSON.parse(messageContent);
-      return messageContent;//jsonObject.cashier, jsonObject.order;
-      } catch (e) {
-      return messageContent;
+    try {
+      const messageContent = JSON.parse(response.choices[0].message.content);
+      let cashier = '';
+      let name = '';
+      let items = [];
+      let response = '';
+      let time = '';
+      if (messageContent.order.name != undefined || messageContent.order.name != null || messageContent.order.name != '') {
+        name = messageContent.order.name;
       }
+      if (messageContent.order.time != undefined || messageContent.order.time != null || messageContent.order.time != '') {
+        name = messageContent.order.time;
+      }
+      if (messageContent.order.items != undefined || messageContent.order.items != null || messageContent.order.items != '') {
+        items = messageContent.order.items;
+      }
+      if (messageContent.response != undefined || messageContent.response != null || messageContent.response != '') {
+        cashier = messageContent.cashier;
+      }
+      return [`hi ${name}, messaging at ${time}`,response.choices[0].message.content, toString(cashier),];
+    } catch (error) {
+      console.error("Error parsing JSON response:", error.message, response.choices[0].message.content);
+      // Handle error appropriately, e.g., return a default response
+      return "An error occurred while processing your message.";
+    }
   }
   else {
   return `An error occurred while processing your message, ${response.choices[0].message.content}.`;
