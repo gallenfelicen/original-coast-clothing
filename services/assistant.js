@@ -114,7 +114,7 @@ constructor() {
       if (messageContent.cashier != undefined || messageContent.cashier != null || messageContent.cashier != '') {
         cashier = messageContent.cashier;
       }
-      return [`hi ${name}, messaging at ${time}`,response.choices[0].message.content, toString(cashier),];
+      return [`hi ${name}, messaging at ${time}`,response.choices[0].message.content, `${cashier}`];
     } catch (error) {
       console.error("Error parsing JSON response:", error.message, response.choices[0].message.content);
       // Handle error appropriately, e.g., return a default response
