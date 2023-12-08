@@ -84,7 +84,7 @@ module.exports = class Receive {
     console.log(
       "Received text:",
       `${this.webhookEvent.message.text} for ${this.user.psid}`
-    );
+    ); 
 
     let event = this.webhookEvent;
 
@@ -93,10 +93,12 @@ module.exports = class Receive {
 
     let gptResponse = await assistant.generateGptResponse(message, this.user);
 
-    let response;
-    response = [
-      Response.genText(gptResponse),
-    ];
+    let responses = [];
+    
+    gptResponse.forEach(response => {
+      responses.push(Response.genText(response));
+    });
+
     console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
 
     return response;
