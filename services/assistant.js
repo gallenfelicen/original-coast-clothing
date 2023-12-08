@@ -103,10 +103,10 @@ constructor() {
       let items = [];
       let time = '';
       if (messageContent.order.name != undefined || messageContent.order.name != null || messageContent.order.name != '') {
-        name = messageContent.order.name;
+        name = messageContent.order. name;
       }
       if (messageContent.order.time != undefined || messageContent.order.time != null || messageContent.order.time != '') {
-        name = messageContent.order.time;
+        time = messageContent.order.time;
       }
       if (messageContent.order.items != undefined || messageContent.order.items != null || messageContent.order.items != '') {
         items = messageContent.order.items;
@@ -114,7 +114,7 @@ constructor() {
       if (messageContent.cashier != undefined || messageContent.cashier != null || messageContent.cashier != '') {
         cashier = messageContent.cashier;
       }
-      return [`hi ${name}, messaging at ${time}`,response.choices[0].message.content, `${cashier}`];
+      return `${cashier}`;
     } catch (error) {
       console.error("Error parsing JSON response:", error.message, response.choices[0].message.content);
       // Handle error appropriately, e.g., return a default response

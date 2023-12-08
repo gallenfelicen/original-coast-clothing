@@ -93,15 +93,15 @@ module.exports = class Receive {
 
     let gptResponse = await assistant.generateGptResponse(message, this.user);
 
-    let responses = [];
+    let response;
     
-    for (let i = 0; i < gptResponse.length; i++) {
-      responses.push(Response.genText(gptResponse[i]));
-    }
+    response = [
+      Response.genText(gptResponse),
+    ];
 
-    console.log("GPT response:", responses, "for", this.user.psid, "with message", message, typeof(responses));
+    console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
 
-    return responses;
+    return response;
   }
 
   async sendMessage(response, delay = 0, isUserRef) {
