@@ -79,7 +79,7 @@ constructor() {
     model: "gpt-3.5-turbo",
     messages: [...previousMessages,
     {role: "system", content: "You/Assitant will STRICTLY reply in json, with two keys: cashier and order. The value of the cashier key is the message on how you would normally reply as a cashier \
-    ,and the value of the order key is from the order and should follow this format: \
+    , use the message contents to fill up the value of order and should follow this format: \
       {\
       'cashier': `XXXX`,\
       'order': \
@@ -101,7 +101,6 @@ constructor() {
       let cashier = '';
       let name = '';
       let items = [];
-      let response = '';
       let time = '';
       if (messageContent.order.name != undefined || messageContent.order.name != null || messageContent.order.name != '') {
         name = messageContent.order.name;
@@ -112,7 +111,7 @@ constructor() {
       if (messageContent.order.items != undefined || messageContent.order.items != null || messageContent.order.items != '') {
         items = messageContent.order.items;
       }
-      if (messageContent.response != undefined || messageContent.response != null || messageContent.response != '') {
+      if (messageContent.cashier != undefined || messageContent.cashier != null || messageContent.cashier != '') {
         cashier = messageContent.cashier;
       }
       return [`hi ${name}, messaging at ${time}`,response.choices[0].message.content, toString(cashier),];
