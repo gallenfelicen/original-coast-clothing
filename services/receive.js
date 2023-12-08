@@ -95,13 +95,13 @@ module.exports = class Receive {
 
     let responses = [];
     
-    gptResponse.forEach(response => {
-      responses.push(Response.genText(response));
-    });
+    for (let i = 0; i < gptResponse.length; i++) {
+      responses.push(Response.genText(gptResponse[i]));
+    }
 
-    console.log("GPT response:", response, "for", this.user.psid, "with message", message, typeof(response));
+    console.log("GPT response:", responses, "for", this.user.psid, "with message", message, typeof(responses));
 
-    return response;
+    return responses;
   }
 
   async sendMessage(response, delay = 0, isUserRef) {
